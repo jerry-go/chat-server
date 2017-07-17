@@ -1,0 +1,61 @@
+syntax = "proto3";
+package proto;
+
+message Nil {}
+message Bool {
+  bool value = 1;
+}
+
+// 短信服务
+message SmsRequest {
+  repeated string phone_list = 1;
+  string content = 2;
+  string code = 3;
+  int64 code_valid_dur = 4;
+}
+
+// 信息核验
+message InfoVerifyRequest {
+  string idcard_no = 1; // 身份证号码
+  string realname = 2; // 真实姓名
+  string bankcard_no = 3; // 银行卡号码
+  string phone = 4; // 预留手机号码
+}
+
+message Idcard {
+  string cardno = 1;
+  string realname = 2;
+}
+
+message Bankcard {
+  string idcard_no = 1;
+  string realname = 2;
+  string bankcard_no = 3;
+  string card_type = 4;
+  string bankname = 5;
+  string phone = 6;
+}
+
+// 开奖信息
+message Openinfo {
+  string issue = 1;  
+  int64 open_time = 2;
+  string data_source = 3;
+  string result = 4;
+}
+
+//硬编码礼包状态.
+ enum GiftStatus {
+   WAIT_RECEIVE = 0;     //等待领取.
+   RECEIVE_SUCCESS = 1;  //领取成功.
+}
+
+service ThirdApi {
+  // -------------------- 短信服务 --------------------
+  rpc SendSmsMessage(SmsRequest) returns (Bool) {}
+  rpc SendSmsCode(SmsRequest) returns (Bool) {}
+  rpc VerifySmsCode(SmsRequest) returns (Bool) {}
+  // -------------------- 信息核验 --------------------
+  rpc VerifyIdcard(InfoVerifyRequest) returns (Idcard) {}
+  rpc VerifyBankcard(InfoVerifyRequest) returns (Bankcard) {}
+}
